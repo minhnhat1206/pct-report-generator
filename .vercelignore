@@ -1,0 +1,24 @@
+# Exclude local data and outputs from Vercel deployment
+uploads/
+Grade_10/
+Grade_11/
+Data/
+*.docx
+*.xlsx
+!IELTS_syllabus_10.xlsx
+!IELTS_syllabus_11.xlsx
+!VSTEP_syllabus.xlsx
+!StudentList10.xlsx
+!StudentList11.xlsx
+!word_template*.docx
+
+# Exclude development and documentation files
+brain/
+.gemini/
+.git/
+verify_*.py
+run.bat
+requirements_dev.txt
+task.md
+walkthrough.md
+implementation_plan.md
