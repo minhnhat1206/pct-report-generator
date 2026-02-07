@@ -88,6 +88,8 @@ vstep_lesson_total = 52
 
 def read_excel(file_path):
     data = pd.read_excel(file_path)
+    # Standardize columns by stripping whitespace
+    data.columns = [str(c).strip() for c in data.columns]
     return data
 
 def convert_to_exponential(value):
@@ -99,6 +101,11 @@ def convert_to_exponential(value):
     return value
 
 def clean_data(data, list_df):
+    if 'User ID' not in data.columns:
+        raise KeyError(f"Cột 'User ID' không tìm thấy trong file dữ liệu tải lên. Các cột tìm thấy: {data.columns.tolist()}")
+    if 'User ID' not in list_df.columns:
+        raise KeyError(f"Cột 'User ID' không tìm thấy trong file StudentList. Các cột tìm thấy: {list_df.columns.tolist()}")
+        
     df = pd.merge(data, list_df, on='User ID')
     df = df[df['Status'] != 'Removed']
     cols_to_select = ['English Class_y','Full Name', 'Study Time', 'Progress','Units(lessons) Passed',
