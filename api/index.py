@@ -6,7 +6,6 @@ import io
 import sys
 from werkzeug.utils import secure_filename
 import logging
-import google.generativeai as genai
 import mammoth
 from docx import Document
 

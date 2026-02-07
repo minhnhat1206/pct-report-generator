@@ -1,4 +1,9 @@
 {
+    "functions": {
+        "api/index.py": {
+            "excludeFiles": "{uploads,Grade_10,Grade_11,Data,brain,.gemini,.git,verify_*,run.bat,requirements_dev.txt,task.md,walkthrough.md,implementation_plan.md}/**"
+        }
+    },
     "rewrites": [
         {
             "source": "/(.*)",

@@ -1,5 +1,3 @@
-
-import google.generativeai as genai
 import pandas as pd
 from docx import Document
 import os
