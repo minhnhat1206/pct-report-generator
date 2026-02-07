@@ -9,23 +9,48 @@ import logging
 import mammoth
 from docx import Document
 
-# Add current dir to path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.append(current_dir)
+# 1. Setup logging FIRST
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-from report_grade_10 import generate_grade_10_reports
-from report_grade_11 import generate_grade_11_reports
+# 2. Handle paths strictly for Vercel
+# This file is in the root directory
+root_dir = os.path.dirname(os.path.abspath(__file__))
+# Ensure root is in sys.path
+if root_dir not in sys.path:
+    sys.path.append(root_dir)
 
-app = Flask(__name__)
+logger.info(f"Startup - root_dir: {root_dir}")
 
-# Use /tmp for writable storage on Vercel, otherwise use local dirs
+# 3. Initialize Flask with ABSOLUTE paths for templates and static
+template_dir = os.path.join(root_dir, 'templates')
+static_dir = os.path.join(root_dir, 'static')
+
+logger.info(f"Template dir set to: {template_dir}")
+if os.path.exists(template_dir):
+    logger.info(f"Templates found: {os.listdir(template_dir)}")
+else:
+    logger.error(f"Template dir NOT FOUND at {template_dir}")
+
+app = Flask(__name__, 
+            template_folder=template_dir, 
+            static_folder=static_dir)
+
+# 4. Import report modules with error handling
+try:
+    from report_grade_10 import generate_grade_10_reports
+    from report_grade_11 import generate_grade_11_reports
+    logger.info("Successfully imported report modules")
+except Exception as e:
+    logger.error(f"FAILED to import report modules: {e}")
+    def generate_grade_10_reports(*args, **kwargs): raise e
+    def generate_grade_11_reports(*args, **kwargs): raise e
+
+# 5. App configuration
 if os.environ.get('VERCEL'):
     BASE_TEMP = '/tmp'
-    app.template_folder = '../templates'
-    app.static_folder = '../static'
 else:
-    BASE_TEMP = current_dir
+    BASE_TEMP = root_dir
 
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_TEMP, 'uploads')
 app.config['GRADE_10_DIR'] = os.path.join(BASE_TEMP, 'Grade_10')
@@ -34,8 +59,6 @@ app.config['GRADE_11_DIR'] = os.path.join(BASE_TEMP, 'Grade_11')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['GRADE_10_DIR'], exist_ok=True)
 os.makedirs(app.config['GRADE_11_DIR'], exist_ok=True)
-
-logging.basicConfig(level=logging.INFO)
 
 import math
 
@@ -54,6 +77,17 @@ def clean_nans(value):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/debug')
+def debug():
+    return jsonify({
+        'root_dir': root_dir,
+        'sys_path': sys.path,
+        'template_dir': template_dir,
+        'template_exists': os.path.exists(template_dir),
+        'root_files': os.listdir(root_dir) if os.path.exists(root_dir) else "not found",
+        'vercel_env': os.environ.get('VERCEL', 'False')
+    })
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -128,7 +162,7 @@ def generate():
                 timesheet_path=path_timesheet
             )
         except Exception as e:
-            logging.error(f"Error generating Grade 10: {e}")
+            logger.error(f"Error generating Grade 10: {e}")
             return jsonify({'success': False, 'message': f'Lỗi tạo báo cáo Khối 10: {str(e)}'})
 
         try:
@@ -143,7 +177,7 @@ def generate():
                 timesheet_path=path_timesheet
             )
         except Exception as e:
-            logging.error(f"Error generating Grade 11: {e}")
+            logger.error(f"Error generating Grade 11: {e}")
             return jsonify({'success': False, 'message': f'Lỗi tạo báo cáo Khối 11: {str(e)}'})
 
         response_data = {
@@ -157,13 +191,10 @@ def generate():
             'stats_11': clean_nans(stats_11)
         }
         
-        # Log the response safely for debugging
-        logging.info(f"Response Payload keys: {response_data.keys()}")
-        
         return jsonify(response_data)
 
     except Exception as e:
-        logging.error(f"General Error: {e}")
+        logger.error(f"General Error: {e}")
         return jsonify({'success': False, 'message': f'Lỗi hệ thống: {str(e)}'})
 
 @app.route('/preview/<grade>/<week>/<filename>')
@@ -184,7 +215,7 @@ def preview_report(grade, week, filename):
             result = mammoth.convert_to_html(docx_file)
             return result.value
     except Exception as e:
-        logging.error(f"Mammoth error: {e}")
+        logger.error(f"Mammoth error: {e}")
         return f"Lỗi hiển thị nội dung: {str(e)}", 500
 
 
