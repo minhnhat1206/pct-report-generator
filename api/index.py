@@ -16,8 +16,18 @@ for d in [current_dir, root_dir]:
     if d not in sys.path:
         sys.path.append(d)
 
-from report_grade_10 import generate_grade_10_reports
-from report_grade_11 import generate_grade_11_reports
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+try:
+    from report_grade_10 import generate_grade_10_reports
+    from report_grade_11 import generate_grade_11_reports
+    logger.info("Successfully imported report modules")
+except Exception as e:
+    logger.error(f"FAILED to import report modules: {e}")
+    # Define dummy functions so the app still starts and we can see logs
+    def generate_grade_10_reports(*args, **kwargs): raise e
+    def generate_grade_11_reports(*args, **kwargs): raise e
 
 app = Flask(__name__)
 
@@ -56,6 +66,19 @@ def clean_nans(value):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/debug')
+def debug():
+    files = os.listdir(root_dir)
+    api_files = os.listdir(current_dir)
+    return jsonify({
+        'root_dir': root_dir,
+        'current_dir': current_dir,
+        'sys_path': sys.path,
+        'root_files': files,
+        'api_files': api_files,
+        'vercel_env': os.environ.get('VERCEL', 'False')
+    })
 
 @app.route('/generate', methods=['POST'])
 def generate():
