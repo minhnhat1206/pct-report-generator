@@ -46,17 +46,22 @@ class_objects['10E4'].add_session('Session 2', Session('3, 4', 'Tim - Tâm'))
 class_objects['10E4'].add_session('Session 3', Session('3, 4', 'Trúc Quỳnh'))
 
 # Static Data Loading
-try:
-    ielts_syllabus = pd.read_excel(os.path.join(BASE_DIR, 'IELTS_syllabus_10.xlsx'))
-    vstep_syllabus = pd.read_excel(os.path.join(BASE_DIR, 'VSTEP_syllabus.xlsx'))
-    list_10 = pd.read_excel(os.path.join(BASE_DIR, 'StudentList10.xlsx'))
-except Exception as e:
-    print(f"Error loading static files: {e}")
-    # Initialize empty DFs to avoid crash on import if files missing, 
-    # but generator will likely fail later.
-    ielts_syllabus = pd.DataFrame()
-    vstep_syllabus = pd.DataFrame()
-    list_10 = pd.DataFrame()
+# Use a more robust way to find files on Vercel
+root_path = os.path.dirname(os.path.abspath(__file__))
+
+def load_static_file(name, default_cols=None):
+    path = os.path.join(root_path, name)
+    try:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File not found: {path}. Current Dir Files: {os.listdir(root_path)}")
+        return pd.read_excel(path)
+    except Exception as e:
+        print(f"CRITICAL: Failed to load {name}: {e}")
+        return pd.DataFrame(columns=default_cols) if default_cols else pd.DataFrame()
+
+ielts_syllabus = load_static_file('IELTS_syllabus_10.xlsx')
+vstep_syllabus = load_static_file('VSTEP_syllabus_10.xlsx')
+list_10 = load_static_file('StudentList10.xlsx', default_cols=['User ID'])
 
 # Totals
 ielts_lesson_total = 32

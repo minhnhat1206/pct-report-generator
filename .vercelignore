@@ -7,7 +7,8 @@ Data/
 *.xlsx
 !IELTS_syllabus_10.xlsx
 !IELTS_syllabus_11.xlsx
-!VSTEP_syllabus.xlsx
+!VSTEP_syllabus_10.xlsx
+!VSTEP_syllabus_11.xlsx
 !StudentList10.xlsx
 !StudentList11.xlsx
 !word_template*.docx

@@ -72,15 +72,21 @@ class_objects['11V6'].add_session('Session 3', Session('3, 4', 'Edward (Nhi)'))
 
 
 # Static Data Loading
-try:
-    ielts_syllabus = pd.read_excel(os.path.join(BASE_DIR, 'IELTS_syllabus.xlsx'))
-    vstep_syllabus = pd.read_excel(os.path.join(BASE_DIR, 'VSTEP_syllabus.xlsx'))
-    list_11 = pd.read_excel(os.path.join(BASE_DIR, 'StudentList11.xlsx'))
-except Exception as e:
-    print(f"Error loading static files: {e}")
-    ielts_syllabus = pd.DataFrame()
-    vstep_syllabus = pd.DataFrame()
-    list_11 = pd.DataFrame()
+root_path = os.path.dirname(os.path.abspath(__file__))
+
+def load_static_file(name, default_cols=None):
+    path = os.path.join(root_path, name)
+    try:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File not found: {path}. Current Dir Files: {os.listdir(root_path)}")
+        return pd.read_excel(path)
+    except Exception as e:
+        print(f"CRITICAL: Failed to load {name}: {e}")
+        return pd.DataFrame(columns=default_cols) if default_cols else pd.DataFrame()
+
+ielts_syllabus = load_static_file('IELTS_syllabus_11.xlsx')
+vstep_syllabus = load_static_file('VSTEP_syllabus_11.xlsx')
+list_11 = load_static_file('StudentList11.xlsx', default_cols=['User ID'])
 
 # Totals
 ielts_lesson_total = 54
