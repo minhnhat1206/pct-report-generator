@@ -9,10 +9,12 @@ import logging
 import mammoth
 from docx import Document
 
-# Add current dir to path
+# Add root and current dir to path for Vercel
 current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.append(current_dir)
+root_dir = os.path.dirname(current_dir)
+for d in [current_dir, root_dir]:
+    if d not in sys.path:
+        sys.path.append(d)
 
 from report_grade_10 import generate_grade_10_reports
 from report_grade_11 import generate_grade_11_reports
