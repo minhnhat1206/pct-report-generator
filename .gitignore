@@ -1,0 +1,20 @@
+# Excel temporary files
+~$*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific
+uploads/
+Grade_10/
+Grade_11/
+*.log
