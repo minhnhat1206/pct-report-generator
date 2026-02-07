@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Tạo Báo cáo PCT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-file-invoice"></i>
+                <h1>PCT Report Generator</h1>
+            </div>
+            <p class="subtitle">Hệ thống tự động hóa báo cáo học tập</p>
+        </header>
+
+        <main>
+            <div class="card glass-panel">
+                <form id="reportForm">
+                    <div class="split-forms">
+                        <div class="form-section">
+                            <div class="section-badge">Khối 10</div>
+                            <div class="input-group">
+                                <label for="week_10">Tuần hiện tại</label>
+                                <input type="number" id="week_10" name="week_10" required min="1"
+                                    placeholder="Ví dụ: 20">
+                            </div>
+                            <div class="input-group">
+                                <label for="ielts_10">Bài IELTS</label>
+                                <input type="number" id="ielts_10" name="ielts_10" required min="0"
+                                    placeholder="Số lượng">
+                            </div>
+                            <div class="input-group">
+                                <label for="vstep_10">Bài VSTEP</label>
+                                <input type="number" id="vstep_10" name="vstep_10" required min="0"
+                                    placeholder="Số lượng">
+                            </div>
+                            <div class="file-input-wrapper">
+                                <label>File dữ liệu Khối 10</label>
+                                <div class="file-drop-area" id="drop-area-10">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <span class="file-msg">Kéo thả hoặc chọn file</span>
+                                    <input type="file" id="file_10" name="file_10" accept=".xlsx" required>
+                                </div>
+                            </div>
+
+                            <div class="config-section">
+                                <label class="config-toggle">
+                                    <span><i class="fa-solid fa-gear"></i> Cấu hình lớp/khóa học</span>
+                                    <i class="fa-solid fa-chevron-down chevron"></i>
+                                </label>
+                                <div class="config-content">
+                                    <div class="input-group">
+                                        <label>Tên Khóa (VSTEP)</label>
+                                        <input type="text" name="course_vstep_10" value="Practical English A2-B2">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Tên Khóa (IELTS)</label>
+                                        <input type="text" name="course_ielts_10" value="Practical English A1">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Danh sách lớp (cách nhau dấu phẩy)</label>
+                                        <textarea name="classes_10" rows="2">10E1, 10E2, 10E3, 10E4</textarea>
+                                    </div>
+                                    <div class="input-grid-mini">
+                                        <div class="input-group">
+                                            <label>Tổng bài IELTS</label>
+                                            <input type="number" name="total_ielts_10" value="32">
+                                        </div>
+                                        <div class="input-group">
+                                            <label>Tổng bài VSTEP</label>
+                                            <input type="number" name="total_vstep_10" value="57">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-badge badge-primary">Khối 11</div>
+                            <div class="input-group">
+                                <label for="week_11">Tuần hiện tại</label>
+                                <input type="number" id="week_11" name="week_11" required min="1"
+                                    placeholder="Ví dụ: 20">
+                            </div>
+                            <div class="input-group">
+                                <label for="ielts_11">Bài IELTS</label>
+                                <input type="number" id="ielts_11" name="ielts_11" required min="0"
+                                    placeholder="Số lượng">
+                            </div>
+                            <div class="input-group">
+                                <label for="vstep_11">Bài VSTEP</label>
+                                <input type="number" id="vstep_11" name="vstep_11" required min="0"
+                                    placeholder="Số lượng">
+                            </div>
+                            <div class="file-input-wrapper">
+                                <label>File dữ liệu Khối 11</label>
+                                <div class="file-drop-area" id="drop-area-11">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <span class="file-msg">Kéo thả hoặc chọn file</span>
+                                    <input type="file" id="file_11" name="file_11" accept=".xlsx" required>
+                                </div>
+                            </div>
+
+                            <div class="config-section">
+                                <label class="config-toggle">
+                                    <span><i class="fa-solid fa-gear"></i> Cấu hình lớp/khóa học</span>
+                                    <i class="fa-solid fa-chevron-down chevron"></i>
+                                </label>
+                                <div class="config-content">
+                                    <div class="input-group">
+                                        <label>Tên Khóa (VSTEP)</label>
+                                        <input type="text" name="course_vstep_11" value="Practical English A2-B2">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Tên Khóa (IELTS)</label>
+                                        <input type="text" name="course_ielts_11"
+                                            value="Practical English B2 & IELTS A2-B1">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Danh sách lớp (cách nhau dấu phẩy)</label>
+                                        <textarea name="classes_11"
+                                            rows="3">11E1, 11E2, 11E3, 11E4, 11V1, 11V2, 11V3, 11V4, 11V5, 11V6</textarea>
+                                    </div>
+                                    <div class="input-grid-mini">
+                                        <div class="input-group">
+                                            <label>Tổng bài IELTS</label>
+                                            <input type="number" name="total_ielts_11" value="54">
+                                        </div>
+                                        <div class="input-group">
+                                            <label>Tổng bài VSTEP</label>
+                                            <input type="number" name="total_vstep_11" value="52">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Global Config (Timesheet Upload) -->
+                    <div class="card shared-config glass-panel"
+                        style="margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.2);">
+                        <div class="section-badge badge-warning"
+                            style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i
+                                class="fa-solid fa-clock-rotate-left"></i> Timesheet & Feedback</div>
+                        <div class="file-input-wrapper" style="margin-top: 1rem;">
+                            <label>File PCT Teacher Timesheet (Responses)</label>
+                            <div class="file-drop-area" id="drop-area-timesheet">
+                                <i class="fa-solid fa-file-excel"></i>
+                                <span class="file-msg">Kéo thả hoặc chọn file timesheet (.xlsx)</span>
+                                <input type="file" id="timesheet_file" name="timesheet_file" accept=".xlsx" required>
+                            </div>
+                            <p class="input-hint"
+                                style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem; font-style: italic;">
+                                * File này dùng chung để lấy nhận xét của giáo viên cho cả 2 khối.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="action-area">
+                        <button type="submit" id="generateBtn" class="btn-primary">
+                            <span class="btn-text">Tạo Báo Cáo</span>
+                            <span class="loader" style="display: none;"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Dashboard Tabs -->
+            <div id="dashboardTabs" class="dashboard-tabs" style="display: none;">
+                <button class="tab-btn active" data-grade="10">Phân tích Khối 10</button>
+                <button class="tab-btn" data-grade="11">Phân tích Khối 11</button>
+            </div>
+
+            <div id="dashboardSection" class="dashboard-container" style="display: none;">
+                <!-- Dashboard content injected by JS -->
+            </div>
+
+            <div id="resultsSection" class="results-container" style="display: none;">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-check-circle"></i> Kết quả báo cáo</h2>
+                        <span id="weekDisplay" class="badge">Tuần ...</span>
+                    </div>
+
+                    <div class="results-grid">
+                        <div class="result-column">
+                            <h3>Khối 10</h3>
+                            <button class="btn-secondary" id="downloadZip10"><i class="fa-solid fa-file-zipper"></i> Tải
+                                trọn bộ (ZIP)</button>
+                            <ul class="file-list" id="list_10">
+                                <!-- Items injected by JS -->
+                            </ul>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="result-column">
+                            <h3>Khối 11</h3>
+                            <button class="btn-secondary" id="downloadZip11"><i class="fa-solid fa-file-zipper"></i> Tải
+                                trọn bộ (ZIP)</button>
+                            <ul class="file-list" id="list_11">
+                                <!-- Items injected by JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 PCT Education System</p>
+        </footer>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2 id="previewTitle">Xem trước báo cáo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="previewBody" class="modal-body">
+                <!-- Mammoth HTML goes here -->
+                <div class="preview-placeholder">Đang tải nội dung...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
