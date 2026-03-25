@@ -253,6 +253,10 @@ def create_report(class_name, current_week, vstep_lesson_num, ielts_lesson_num, 
 
     df = data[data['English_Class_y'] == class_name].copy()
     
+    if df.empty:
+        print(f"Skipping {class_name} because no students were found in this class.")
+        return None
+
     # Feedback Helper
     def add_feedback_local():
         feedback_class = data_feedback[data_feedback['Class'].str.contains(class_name, na=False)].copy()
